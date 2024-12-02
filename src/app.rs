@@ -17,7 +17,12 @@ pub fn shell(_options: LeptosOptions) -> impl IntoView {
 
 #[server(RedirectMe)]
 pub async fn redirect_me() -> Result<(), ServerFnError> {
+    #[cfg(feature = "ssr_actix")]
     leptos_actix::redirect("/foo");
+
+    #[cfg(feature = "ssr_axum")]
+    leptos_axum::redirect("/foo");
+
     Ok(())
 }
 

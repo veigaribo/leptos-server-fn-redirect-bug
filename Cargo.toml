@@ -10,30 +10,50 @@ crate-type = ["cdylib", "rlib"]
 # leptos = { path = "../leptos/leptos" }
 # leptos_meta = { path = "../leptos/meta" }
 # leptos_actix = { path = "../leptos/integrations/actix" }
+# leptos_axum = { path = "../leptos/integrations/axum" }
 # leptos_router = { path = "../leptos/router" }
 # actix-web = { path = "../actix-web/actix-web" }
 # actix-http = { path = "../actix-web/actix-http" }
+# http = { path = "../http" }
 
 [dependencies]
 actix-files = { version = "0.6", optional = true }
 actix-web = { version = "4", optional = true, features = ["macros"] }
 console_error_panic_hook = "0.1"
 http = { version = "1.0.0", optional = true }
-leptos = { version = "0.7.0-rc3", features = ["nightly"] }
-leptos_meta = { version = "0.7.0-rc3" }
-leptos_actix = { version = "0.7.0-rc3", optional = true }
-leptos_router = { version = "0.7.0-rc3" }
+leptos = { version = "0.7.0", features = ["nightly"] }
+leptos_meta = { version = "0.7.0" }
+leptos_actix = { version = "0.7.0", optional = true }
+leptos_router = { version = "0.7.0" }
 wasm-bindgen = "=0.2.95"
+axum = { version = "0.7.9", optional = true }
+leptos_axum = { version = "0.7.0", optional = true }
+tower = { version = "0.5.1", optional = true }
+tower-http = { version = "0.6.2", optional = true }
+tokio = { version = "1.41.1", features = ["rt-multi-thread"], optional = true }
 
 [features]
 csr = [
   "leptos/csr",
 ]
 hydrate = ["leptos/hydrate"]
-ssr = [
+ssr_actix = [
   "dep:actix-web",
   "dep:actix-files",
   "dep:leptos_actix",
+  "leptos/ssr",
+  "leptos/tracing",
+  "leptos_meta/ssr",
+  "leptos_meta/tracing",
+  "leptos_router/ssr",
+  "leptos_router/tracing",
+]
+ssr_axum = [
+  "dep:axum",
+  "dep:tower",
+  "dep:tower-http",
+  "dep:leptos_axum",
+  "dep:tokio",
   "leptos/ssr",
   "leptos/tracing",
   "leptos_meta/ssr",
@@ -81,7 +101,7 @@ env = "DEV"
 # The features to use when compiling the bin target
 #
 # Optional. Can be over-ridden with the command line parameter --bin-features
-bin-features = ["ssr"]
+bin-features = ["ssr_actix"]
 
 # If the --no-default-features flag should be used when compiling the bin target
 #
